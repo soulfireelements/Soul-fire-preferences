@@ -1,0 +1,7 @@
+{
+  "name": "soul-fire-preferences",
+  "version": "1.0.0",
+  "dependencies": {
+    "@shopify/shopify-api": "^9.0.0"
+  }
+}
