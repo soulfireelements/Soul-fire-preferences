@@ -32,8 +32,9 @@ export default async function handler(req, res) {
 
     const gid = `gid://shopify/Customer/${customerId}`;
     const query = `
-      query GetMetafields($id: ID!) {
+      query GetCustomerData($id: ID!) {
         customer(id: $id) {
+          tags
           metafields(first: 20, namespace: "custom") {
             edges { node { key value } }
           }
@@ -54,11 +55,13 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
-    const metafields = data?.data?.customer?.metafields?.edges?.map(e => e.node) || [];
-    return res.status(200).json({ metafields });
+    const customer = data?.data?.customer;
+    const isSubscriber = customer?.tags?.includes('candle-box-subscriber') ?? false;
+    const metafields = customer?.metafields?.edges?.map(e => e.node) || [];
+
+    return res.status(200).json({ isSubscriber, metafields });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 }
-
